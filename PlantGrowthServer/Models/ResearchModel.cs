@@ -19,10 +19,10 @@ namespace PlantGrowthServer.Models
         public string Description { get; set; }
 
         [BsonElement("Start_date")]
-        public DateTime Start_date { get; set; }
+        public string Start_date { get; set; }
 
         [BsonElement("End_date")]
-        public DateTime End_date { get; set; }
+        public string End_date { get; set; }
 
         [BsonElement("General_plant_id")]
         public string General_plant_id { get; set; }

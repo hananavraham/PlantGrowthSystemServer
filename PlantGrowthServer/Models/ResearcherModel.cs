@@ -20,5 +20,8 @@ namespace PlantGrowthServer.Models
 
         [BsonElement("Degree")]
         public string Degree { get; set; }
+
+        [BsonElement("Researches")]
+        public List<string> Researches_Id { get; set; }
     }
 }

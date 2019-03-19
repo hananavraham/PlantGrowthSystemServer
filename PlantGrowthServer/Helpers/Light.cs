@@ -8,6 +8,6 @@ namespace PlantGrowthServer.Helpers
     public class Light
     {
         public float _Light { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }

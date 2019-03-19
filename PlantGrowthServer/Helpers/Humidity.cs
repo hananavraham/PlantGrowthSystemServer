@@ -8,6 +8,6 @@ namespace PlantGrowthServer.Helpers
     public class Humidity
     {
         public int _Humidity { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }

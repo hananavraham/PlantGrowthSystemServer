@@ -74,11 +74,11 @@ namespace PlantGrowthServer.Controllers
 
         // POST : Researcher/Edit
         [HttpPost]
-        public ActionResult Edit(string id, ResearcherModel researcher)
+        public ActionResult Edit(ResearcherModel researcher)
         {
             try
             {
-                var filter = Builders<ResearcherModel>.Filter.Eq("_id", ObjectId.Parse(id));
+                var filter = Builders<ResearcherModel>.Filter.Eq("_id", researcher.Id);
                 var update = Builders<ResearcherModel>.Update
                     .Set("Email", researcher.Email)
                     .Set("Degree", researcher.Degree);
@@ -113,22 +113,16 @@ namespace PlantGrowthServer.Controllers
         [HttpGet]
         public ActionResult GetOwnerResearches(string id)
         {
-            List<ResearchModel> researches;
+            List<ResearchModel> researches = new List<ResearchModel>();
             var owner = researcherCollection.AsQueryable<ResearcherModel>().SingleOrDefault(x => x.Id == ObjectId.Parse(id));
             var researchCollection = dBContext.database.GetCollection<ResearchModel>("Research");
-            //var query = researchCollection.AsQueryable< ResearchModel>().Join(researcherCollection.AsQueryable<ResearcherModel>()),
+            
+            foreach (string researchId in owner.Researches_Id)
+            {
+                researches.Add(researchCollection.AsQueryable<ResearchModel>().SingleOrDefault(x => x.Id == ObjectId.Parse(researchId)));
+            }
 
-
-            //researches = researchCollection.AsQueryable<ResearchModel>().SingleOrDefault(x => x.Owners == owner.Id);
-
-
-            var result = researchCollection.AsQueryable<ResearchModel>().SelectMany(x => x.Owners.Find(b => b == id));
-            return Content(JsonConvert.SerializeObject(result));
-
-
-
-
-
+            return Content(JsonConvert.SerializeObject(researches));
         }
 
     }

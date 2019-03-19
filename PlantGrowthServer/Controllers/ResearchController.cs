@@ -63,6 +63,7 @@ namespace PlantGrowthServer.Controllers
         {
             try
             {
+                //research.Status = "Pending";
                 researchCollection.InsertOne(research);
                 return View();
             }
@@ -75,11 +76,11 @@ namespace PlantGrowthServer.Controllers
 
         // POST : Research/Edit
         [HttpPost]
-        public ActionResult Edit(string id, ResearchModel research)
+        public ActionResult Edit(ResearchModel research)
         {
             try
             {
-                var filter = Builders<ResearchModel>.Filter.Eq("_id", ObjectId.Parse(id));
+                var filter = Builders<ResearchModel>.Filter.Eq("_id", research.Id);
                 var update = Builders<ResearchModel>.Update
                     .Set("Start_date", research.Start_date)
                     .Set("End_date", research.End_date)
@@ -122,7 +123,7 @@ namespace PlantGrowthServer.Controllers
         {
             try
             {
-                var filter = Builders<ResearchModel>.Filter.Eq("_id", researchId);
+                var filter = Builders<ResearchModel>.Filter.Eq("_id", ObjectId.Parse(researchId));
                 var builder = Builders<ResearchModel>.Update;
                 var update = builder
                     .Push("Owners", ownersId);
@@ -145,5 +146,78 @@ namespace PlantGrowthServer.Controllers
             //return Content(JsonConvert.SerializeObject(researchs));
             return View();
         }
+
+        // POST : Research/StopOrContinueResearch
+        [HttpPost]
+        public ActionResult StopOrContinueResearch(ResearchModel research)
+        {
+            try
+            {
+                var filter = Builders<ResearchModel>.Filter.Eq("_id", research.Id);
+                var update = Builders<ResearchModel>.Update
+                    .Set("Status", research.Status);
+                var result = researchCollection.UpdateOne(filter, update);
+
+                // need to check the status and update the Env. + Measure controls  //
+
+                return View();
+            }
+
+            catch
+            {
+                return null;
+            }
+        }
+
+        // This method check if we have new Research in pending
+        // return plant Model to env. control ip
+        // GET : Research/GetNewResearchByIp
+        [HttpGet]
+        public ActionResult GetNewResearchByIp(string plantIp)
+        {
+            try
+            {
+                var plantCollection = dBContext.database.GetCollection<PlantModel>("Plant");
+                var plant = plantCollection.AsQueryable<PlantModel>().SingleOrDefault(x => x.Env_control_address == plantIp);
+                var research = researchCollection.AsQueryable<ResearchModel>().SingleOrDefault(x => x.Id == ObjectId.Parse(plant.ResearchId));
+                if (research.Status == "Pending")   // check if we have new Research
+                {
+                    // update Research status to Running
+                    var filter = Builders<ResearchModel>.Filter.Eq("_id", research.Id);
+                    var update = Builders<ResearchModel>.Update
+                        .Set("Status", "Running");
+                    var result = researchCollection.UpdateOne(filter, update);
+
+                    return Content(JsonConvert.SerializeObject(plant));
+                }                    
+                else
+                    return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // GET : Research/AddPlantToResearch
+        [HttpGet]
+        public ActionResult AddPlantToResearch(string researchId, string plantId)
+        {
+            try
+            {
+                var filter = Builders<ResearchModel>.Filter.Eq("_id", ObjectId.Parse(researchId));
+                var update = Builders<ResearchModel>.Update
+                    .Push("Plants", plantId);
+                var result = researchCollection.UpdateOne(filter, update);
+                return View();
+            }
+
+            catch(Exception e)
+            {
+                return null;
+            }
+
+        }
+
     }
 }

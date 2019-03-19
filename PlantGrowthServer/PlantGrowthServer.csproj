@@ -154,6 +154,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Humidity.cs" />
+    <Compile Include="Helpers\Intervals.cs" />
     <Compile Include="Helpers\Light.cs" />
     <Compile Include="Helpers\Measure.cs" />
     <Compile Include="Helpers\Size.cs" />

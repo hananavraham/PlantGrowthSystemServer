@@ -7,8 +7,8 @@ namespace PlantGrowthServer.Helpers
 {
     public class Measure
     {
-        public Temperature Temp { get; set; }
-        public Light Light { get; set; }
-        public Humidity Humidity { get; set; }
+        public List<Temperature> Temp { get; set; }
+        public List<Light> Light { get; set; }
+        public List<Humidity> Humidity { get; set; }
     }
 }

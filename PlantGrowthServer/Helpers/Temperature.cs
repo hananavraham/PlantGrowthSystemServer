@@ -8,6 +8,6 @@ namespace PlantGrowthServer.Helpers
     public class Temperature
     {
         public float _Temperature { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }

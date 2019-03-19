@@ -65,11 +65,11 @@ namespace PlantGrowthServer.Controllers
 
         // POST: GeneralPlant/Edit
         [HttpPost]
-        public ActionResult Edit(string id, GeneralPlantModel generalPlant)
+        public ActionResult Edit(GeneralPlantModel generalPlant)
         {
             try
             {
-                var filter = Builders<GeneralPlantModel>.Filter.Eq("_id", ObjectId.Parse(id));
+                var filter = Builders<GeneralPlantModel>.Filter.Eq("_id", generalPlant.Id);
                 var update = Builders<GeneralPlantModel>.Update
                     .Set("Name", generalPlant.Name)
                     .Set("Image", generalPlant.Image);

@@ -8,6 +8,6 @@ namespace PlantGrowthServer.Helpers
     public class Size
     {
         public float _Size { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }
